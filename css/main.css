@@ -105,3 +105,9 @@ footer {
     color: DarkSlateGray;
     margin-bottom: 1.5em;
 }
+.post blockquote {
+  margin: 1.25em 0;
+  padding: 0.25em 1em;
+  border-left: 4px solid CornflowerBlue;
+  color: DarkSlateGray;
+}

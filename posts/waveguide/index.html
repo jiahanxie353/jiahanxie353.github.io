@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  
+  <title>Silicon Photonic Waveguides for ASIC Engineers: From Total Internal Reflections to Foundry Process | Jiahan Xie</title>
+  
+  <link rel="icon" href="https://jiahanxie353.github.io/img/favicon.png" type="image/png">
+  <link href="https://jiahanxie353.github.io/css/main.css" type="text/css" rel="stylesheet">
+</head>
+
+<body>
+  <header>
+    <nav>
+      <h1 class="name"><a class="nav-item" href="/">Jiahan Xie</a></h1>
+      <a class="nav-item" href="/#research">Research</a>
+      <a class="nav-item" href="/#teaching">Teaching</a>
+      <a class="nav-item" href="https://jiahanxie353.github.io/posts/">Posts</a>
+      <a class="nav-item" href="https://jiahanxie353.github.io/misc/">Misc</a>
+      <a class="nav-item" href="https://jiahanxie353.github.io/Jiahan_Xie_CV_Current.pdf">CV</a>
+    </nav>
+  </header><!--End of Header-->
+
+  <section class="section">
+    <div class="container">
+      
+<h1 class="title">
+  Silicon Photonic Waveguides for ASIC Engineers: From Total Internal Reflections to Foundry Process
+</h1>
+<div class="description">
+I wanted to write this post both as a record of what I’ve learned and as a quick intro for other ASIC engineers who want enough photonics background to understand what is happening around the electronics.<br>
+<strong>August 15, 2026</strong>
+</div>
+
+<div class="post">
+<script>
+  window.MathJax = {
+    tex: {
+      inlineMath: [['$', '$']],
+      displayMath: [['$$', '$$']]
+    }
+  };
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+<p align="center"><img src="images/cover.jpg" alt="Silicon photonic waveguides" width="42.5%"></p>
+<p>Recently, I’ve been reading through a bunch of silicon photonics papers because I’m spending the summer as an ASIC engineer at Ayar Labs.</p>
+<p>Ayar Labs works on co-packaged optics (CPO), where electronic and photonic components are brought together inside the same package. My background is in traditional silicon-based electronic integrated circuits (EICs), but my daily work now constantly brings me across terms like <strong>waveguide</strong>, one of the most basic building blocks of a silicon photonic chip.</p>
+<p>So I wanted to write this post both as a record of what I’ve learned and as a quick intro for other ASIC engineers who want enough photonics background to understand what is happening around the electronics.</p>
+<h2 id="what-is-a-silicon-photonic-waveguide">What is a silicon photonic waveguide?</h2>
+<p>Since my context is silicon photonics and CPO, I’ll focus on <strong>on-chip dielectric waveguides</strong>. So first: <em>what is a waveguide, and why do we need one</em>?</p>
+<p>A <strong>waveguide</strong>, as the name suggests, is a structure that guides a wave. In our case, <strong>that wave is light</strong> - an <strong>electromagnetic wave</strong>.</p>
+<p>Instead of letting light propagate freely through space, a waveguide confines it and carries it along a designed path with relatively low loss. A useful ASIC analogy is:</p>
+<blockquote>
+<p>A waveguide is the optical counterpart of an electrical wire.</p>
+</blockquote>
+<h3 id="what-does-one-physically-look-like">What does one physically look like?</h3>
+<p>A dielectric waveguide has a layered structure. My slightly unserious mental model is a sushi bake:</p>
+<ul>
+<li>In the center is the <strong>core</strong>, where most of the optical field is concentrated. Think of this as the <em>salmon</em> in a sushi.</li>
+<li>Around the core is the <strong>cladding</strong>, which has a lower refractive index and helps confine the light. This is the <em>rice</em> around the filling.</li>
+<li>Underneath everything is the <strong>substrate</strong>, which provides mechanical support. This is the <em>nori/seaweed</em> at the bottom.</li>
+</ul>
+<p align="center"><img src="images/sushi-bake-and-waveguide-x-section.png" alt="Sushi bake and waveguide cross section" width="90%"></p>
+<p align="center"><strong>Figure 1.</strong> Sushi Bake and Waveguide Cross Section</p>
+<p>A common silicon-photonics structure uses a silicon core surrounded by silicon dioxide (SiO₂). Underneath is a silicon substrate, with a buried oxide layer separating the waveguide from it. This structure is called <strong>silicon-on-insulator (SOI)</strong>.</p>
+<h3 id="why-does-light-stay-inside">Why does light stay inside?</h3>
+<p>The first intuitive explanation comes from <strong>Snell’s law</strong> and <strong>total internal reflection (TIR)</strong>.</p>
+<p>When light travels from a material with a higher refractive index into one with a lower refractive index, there is a critical incident angle beyond which no propagating refracted wave exists in the lower-index material. The light is totally internally reflected.</p>
+<p>At telecom wavelengths:</p>
+<ul>
+<li>silicon has $n \approx 3.5$;</li>
+<li>silicon dioxide has $n \approx 1.44$.</li>
+</ul>
+<p>That large index contrast allows a silicon core surrounded by oxide to confine light very strongly.</p>
+<p align="center"><img src="images/TIR-and-mirroring.png" alt="Total internal reflection in a silicon waveguide" width="60%"></p>
+<p align="center"><strong>Figure 2.</strong> The large refractive index difference between silicon and silica enables TIR</p>
+<p>Calling the interface a “mirror” is a useful intuition, although the real electromagnetic picture is richer than a ray repeatedly bouncing between walls.</p>
+<p>This SOI platform is especially attractive because the CMOS silicon processing is already extremely mature. Silicon photonics can reuse a large amount of semiconductor manufacturing infrastructure - lithography, etching, deposition, implants, metallization, foundry PDKs, and wafer-scale fabrication.</p>
+<p>The silicon substrate itself mainly acts as the mechanical base. The buried oxide is also important because it optically isolates the waveguide from the high-index silicon substrate below.</p>
+<h3 id="what-about-materials-other-than-silicon">What about materials other than silicon?</h3>
+<p>Of course, we were mainly discussing about using silicon as the core, which works in the near infra-red region; we can also use other materials such as silicon nitride or silica that work in different wavelengths. For example, silicon nitride can work at wavelengths less than 1.1um. We can compare the pros and cons of silicon and silicon nitride briefly below:</p>
+<p><strong>Silicon</strong> has a very high refractive index, giving strong confinement and allowing very compact devices and tight bends.</p>
+<p>The downside is that high-index-contrast silicon waveguides are sensitive to sidewall roughness and dimensional variation.</p>
+<p><strong>Silicon nitride (Si₃N₄)</strong> has a lower refractive index, so its waveguides are generally larger and require wider bends.</p>
+<p>But Si₃N₄ can achieve extremely low propagation loss and has negligible two-photon absorption around telecom wavelengths, making it very useful for long routing, high-Q resonators, and higher optical powers.</p>
+<p>For this post, though, I’ll mostly stick with silicon.</p>
+<h2 id="what-actually-travels-inside-a-waveguide">What actually travels inside a waveguide?</h2>
+<p>The ray picture above says that light reflects/bounces repeatedly from the core-cladding boundaries. Although that picture is useful, eventually we need to switch to the electromagnetic-wave picture.</p>
+<p>Under TIR, the field does not suddenly become zero at the interface. Part of the electromagnetic field extends into the cladding and decays exponentially. This is called the <strong>evanescent field</strong>.</p>
+<p align="center"><img src="images/evanescent-field.jpg" alt="Evanescent field at an interface" width="25%"></p>
+<p align="center"><strong>Figure 3.</strong> Evanescent field has exponential decay in the rarer medium</p>
+<p>For ideal TIR, there is no net average power flowing away from the interface into the cladding. But the field is still physically present there, and that becomes extremely important later for things like directional couplers and ring resonators.</p>
+<h3 id="waveguide-modes">Waveguide modes</h3>
+<p>The next important concept is a <strong>mode</strong>. At a high level, a waveguide mode is a particular spatial pattern of electric and magnetic fields that can propagate along the waveguide while keeping the same cross-sectional shape. We need different modes because different patterns/configurations of electric and magnetic fields have different performances such as efficiency, signal clarity, etc.</p>
+<p>We can write a mode schematically as:</p>
+<p>$$
+\mathbf{e}(x,y)e^{i(\beta z-\omega t)}
+$$</p>
+<p>with a similar expression for $\mathbf{H}$. Here:</p>
+<ul>
+<li>$\mathbf{e}(x,y)$ is the field pattern across the waveguide cross-section.</li>
+<li>$\omega$ is the optical angular frequency, it dictates the energy $E = \hbar\omega$ of individual light quanta.</li>
+<li>$\beta$ is the propagation constant along the waveguide, it tells tells how phase advances.</li>
+<li>$z$ is the propagation direction</li>
+</ul>
+<p>So, at a given optical frequency, a mode is fundamentally characterized by its transverse electromagnetic field profile together with its propagation constant $\beta$.</p>
+<p>The corresponding effective refractive index (it describes the combined waveguide structure) is:</p>
+<p>$$
+n_{\mathrm{eff}} = \frac{\beta}{k_0}
+$$</p>
+<p>where $k_0 = \omega/c = 2\pi/\lambda_0$ is the free-space wavenumber. We need to note that if width, temperature, or material properties change effective refractive index, the optical phase changes too.</p>
+<h4 id="where-do-the-different-modes-come-from">Where do the different modes come from?</h4>
+<p>The waveguide geometry and material distribution define a refractive-index profile $n(x,y)$.</p>
+<p>Maxwell’s equations, together with the boundary conditions at the material interfaces, form an eigenvalue problem. In a simplified scalar picture, this can be written as a partial differential equation solving</p>
+<p>$$
+\left[\nabla_t^2 + k_0^2 n^2(x,y)\right]\psi(x,y) = \beta^2\psi(x,y)
+$$</p>
+<p>where:</p>
+<ul>
+<li>$\nabla_t^2$ is the transverse Laplacian.</li>
+<li>$\psi(x,y)$ is the transverse field profile in the scalar approximation.</li>
+</ul>
+<p>The solved eigenfunctions will become a discrete set of field functions; and eigenvalues give propagation constants and optical frequency. And only certain field profiles satisfy both the differential equation and the boundary conditions. Those allowed solutions form a discrete set $(\psi_0, \beta_0),\ (\psi_1, \beta_1),\ (\psi_2, \beta_2),\ \ldots$ Basically each solution corresponds to a mode.</p>
+<p>Above are the modes that can exist in theory, but in practice, what we need to know is that the most widely used is the fundamental mode, which is the  lowest-order spatial mode. It has the simplest transverse field profile (see the first sinusoidal wave in the image below, it has no internal zero crossing where the electric field amplitude does not change sign somewhere inside the waveguide core); it's usually most strongly confined, and has the largest propagation constant.</p>
+<p align="center"><img src="images/te-10-20-amplitude.png" alt="Field profiles of several transverse electric modes" width="32%"></p>
+<p align="center"><strong>Figure 4.</strong> Different solutions of the partial differential equation gives different electromagnetic field profile</p>
+<p>Smaller waveguides can often be designed so that only the fundamental spatial mode is guided. This is usually desirable because multiple modes can propagate with different $\beta$'s and group velocities, creating modal dispersion and unwanted mode coupling.</p>
+<h3 id="te-and-tm">TE and TM</h3>
+<p>And in parallel to the modes above, with respect to the electric/magnetic field’s propagation direction, modes can also be categorized by polarization.</p>
+<p>And there are two most common modes that wave propagates, one is <strong>transverse electric (TE)</strong> and another is <strong>transverse magnetic (TM)</strong> mode.</p>
+<p>We need to understand that electromagnetic waves are vectors that point in specific directions during propagation. TE mode means the electric field is “transverse”/perpendicular to the propagation direction, i.e., $E_z = 0$; and for TM, it means the magnetic field is “transverse”/perpendicular to the propagation direction, i,e., $H_z = 0$. We can see the picture below demonstrating TE and TM mode.</p>
+<p>A real rectangular silicon waveguide confines the field in both transverse dimensions, so the modes are generally hybrid rather than perfectly TE or TM. But in practice, we use the fundamental mode of the TE mode $\mathrm{TE}_{10}$ since it has low signal loss and  less cross talk because it has strong confinement because $E_z = 0$.</p>
+<p align="center"><img src="images/te-tm-mode-and-wave-propag.jpg" alt="Electric and magnetic fields in TE and TM modes" width="53.33%"></p>
+<p align="center"><strong>Figure 5.</strong> Visualization of TE and TM mode</p>
+<h2 id="how-waveguide-geometry-changes-behavior">How waveguide geometry changes behavior</h2>
+<p>There are different geometry shapes of waveguides, and different geometry has different behavior. And waveguide geometry matters a lot.</p>
+<p>For a channel waveguide, parameters such as:</p>
+<ul>
+<li>width</li>
+<li>height</li>
+<li>etch depth</li>
+<li>cross-sectional shape</li>
+</ul>
+<p>change the refractive-index distribution $n(x,y)$. And because $n(x,y)$ determines the Maxwell eigenmodes, changing geometry changes the optical behavior of the waveguide. So waveguide geometry matters a lot.</p>
+<p>Also, channel/rectangle waveguides are the most common used in photonic integrated circuits (PIC). And there are different types of channel/rectangle waveguides, such as buried waveguides, ridge waveguides, rib waveguides, etc. as shown below.</p>
+<p align="center"><img src="images/channel-waveguides.jpg" alt="Several types of channel waveguides" width="37.5%"></p>
+<p align="center"><strong>Figure 6.</strong> Different types of waveguides</p>
+<h3 id="width-and-height">Width and Height</h3>
+<p>Increasing the width or height generally gives the optical field more high-index silicon to occupy.</p>
+<p>That tends to:</p>
+<ul>
+<li>increase confinement</li>
+<li>increase $n_{\mathrm{eff}}$</li>
+<li>increase $\beta$</li>
+<li>eventually allow higher-order modes to become guided</li>
+</ul>
+<p>In many silicon-photonics foundry processes, the silicon device-layer thickness is fixed - for example, around 220 nm - so <strong>width</strong> becomes one of the main dimensions designers tune.</p>
+<h3 id="cross-section-shape-strip-wire-versus-rib-waveguides">Cross-section shape: Strip/wire versus rib waveguides</h3>
+<p>Waveguide shape matters beyond just width and height, the general structure of the cross-section also matters a lot. Let’s compare strip/wire waveguide versus rib waveguide.</p>
+<p>A <strong>strip</strong>, sometimes called a silicon photonic wire, is fully etched down to the buried oxide on both sides.</p>
+<p>That produces a strong lateral Si/SiO₂ index contrast, so the optical mode is tightly confined.</p>
+<p>A <strong>rib waveguide</strong> is only partially etched. A thin silicon slab remains beside the rib, so the lateral index contrast is weaker and the optical field spreads farther sideways.</p>
+<p>And as a result, that leads to an important trade-offs. Strip/wire waveguides:</p>
+<ul>
+<li>have strong confinement</li>
+<li>support small bend radii, thus allowing dense layouts</li>
+<li>are more sensitive to sidewall roughness and dimensional variation (because the walls are fully etched and the optical mode interacts stronger)</li>
+</ul>
+<p>While rib waveguides:</p>
+<ul>
+<li>have weaker lateral confinement</li>
+<li>generally require larger bends</li>
+<li>but they can have lower propagation loss</li>
+</ul>
+<p align="center"><img src="images/rib-versus-strip.png" alt="Rib and strip waveguide cross sections and optical energy distributions" width="37.5%"></p>
+<p align="center"><strong>Figure 7.</strong> Cross section and optical energy distribution difference between the rib waveguide and strip/wire waveguide</p>
+<p>Also, one important difference to note for photonics against ordinary electrical wiring is that, although the geometry effects the general behavior of the signals being transmitted in the optical/electrical wires, the former also defines the electromagnetic modes that are allowed to carry the optical signal while the latter does not:</p>
+<p>In electrical wires, all electrons can travel through the wire normally, it’s just that the RC delay, IR drop might be different under different geometries, but digit 1 is still fundamentally a voltage level on the same conductor.</p>
+<p>But for the optical waveguides, geometries define the allowed Maxwell electromagnetic solutions, and defines the spatial signal that can propagate, for example, narrow waveguides only allow the fundamental TE mode, and increasing the width can allow higher-order modes.</p>
+<h2 id="how-waveguides-become-useful-components">How waveguides become useful components</h2>
+<p>One single waveguide can act as an optical wire to the electromagnetic field, and multiple waveguides together can form various powerful components on PIC.</p>
+<h3 id="directional-coupler">Directional Coupler</h3>
+<p>Bring two waveguides close together and their evanescent fields will overlap. The individual waveguide modes are no longer completely independent, and optical power can transfer from one waveguide into the other. This forms a <strong>directional coupler (DC)</strong>.</p>
+<p>Coupled-mode theory describes the phenomenon and I’m not an expert in this, but the basic physical intuition is simple:</p>
+<blockquote>
+<p>Two sufficiently close optical modes can interact through their evanescent fields.</p>
+</blockquote>
+<p>DCs and waveguides are foundational devices to form Mach-Zehnder interferometers (MZI) and ring resonators, and DCs are also foundational for power combining and splitting, etc.</p>
+<h3 id="mach-zehnder-interferometer">Mach–Zehnder interferometer</h3>
+<p>Let’s take MZI as an example, it has two DCs on both ends, one side each, where the first DC split the input light to two arms, where each arm is a waveguide, and then the light will have constructive/desctructive interference due to the pre-designed arm lengths, and then the second DC on the other end combines two lights together because output.</p>
+<p align="center"><img src="images/MZI.png" alt="Mach–Zehnder interferometer" width="37.5%"></p>
+<p align="center"><strong>Figure 8.</strong> Visualization of a Mach–Zehnder interferometer</p>
+<p>Ring resonators are also composed of waveguides and they are used for selectively add/drop lights with different wavelengths by also leveraging inference.</p>
+<p>There are many more examples and I’m not elaborating on all of them because of the limit, but it can be seen that waveguides are essential basic building blocks for photonic chips.</p>
+<h2 id="how-waveguides-are-manufactured-and-why-process-variation-matters">How waveguides are manufactured, and why process variation matters</h2>
+<p>Fabricating low cost photonic chips using the well-established IC fabrication process is a very crucial motivation for silicon photonic engineers.</p>
+<p>The fabrication process usually begins with SOI wafer preparation, where materials such as silicon and silicon nitride wafers are prepared and cleaned for the process.</p>
+<p align="center"><img src="images/fabricate-process.jpg" alt="Silicon waveguide fabrication process" width="42.5%"></p>
+<p align="center"><strong>Figure 9.</strong> Fabrication process of a silicon waveguide</p>
+<h3 id="lithography">Lithography</h3>
+<p>Classic photolithography such as deep ultraviolet lithography technology, commonly with wavelengths of 248nm or 193nm, is used.</p>
+<p>For even smaller feature sizes, electron-beam lithography is used.</p>
+<p>Note that for the lithography technology, both uses a resist as the shielding layer, and the former uses mask to transfer patterns on the wafer all at once, while the latter acts like a pencil and uses a focused beam of electrons to draw on the wafer.</p>
+<h3 id="etching">Etching</h3>
+<p>The resist pattern is transferred into silicon using dry etching processes such as reactive-ion or inductively coupled plasma etching.</p>
+<p>Different etch depths can create:</p>
+<ul>
+<li>shallow structures</li>
+<li>rib waveguides</li>
+<li>fully etched strip waveguides</li>
+<li>grating couplers</li>
+</ul>
+<h3 id="cladding-and-additional-devices">Cladding and additional devices</h3>
+<p>Material deposition, such as plasma-enhanced chemical vapor deposition or low-pressure chemical vapor deposition (for silicon nitride) is used, to deposit silica on as the upper cladding layer.</p>
+<p>Depending on the process, additional steps can add: germanium photodetectors, heaters, metals interconnects, etc.</p>
+<p>As one real-world reference point, a common single-mode silicon strip/ridge waveguide in a foundry platform uses roughly a <strong>220 nm silicon device layer and a 0.4–0.5 μm waveguide width</strong> for the fundamental TE-like mode.</p>
+<p>As ASIC engineers, we have to know that process variation really matters. For example, sidewall roughness can scatter light and increase propagation loss. Width variation changes the effective index: $\Delta W \rightarrow \Delta n_{\mathrm{eff}}$. And that becomes a phase error: $\Delta n_{\mathrm{eff}} \rightarrow \Delta\phi$.</p>
+<p>For resonant structures such as microrings, geometric variation can shift the resonance wavelength.</p>
+<p>Temperature also matters because silicon has a relatively large thermo-optic coefficient, so changing temperature changes its refractive index and therefore $n_{\mathrm{eff}}$.</p>
+<p>That is why real silicon-photonic chips often include heaters, monitors, feedback loops, and calibration circuitry.</p>
+<p>And what I've come to realize is that, photonic waveguide may look like a simple piece of patterned silicon, but its geometry, material stack, fabrication variation, temperature, and neighboring structures all affect the electromagnetic mode traveling through it. And a useful shift in intuition for me is:</p>
+<blockquote>
+<p>The waveguide is the routing fabric of the photonic chip, while its geometry also participates directly in determining how the optical field propagates.</p>
+</blockquote>
+<h2 id="acknowledgements">Acknowledgements</h2>
+<p>Drafted by me, polished by AI. Used ChatGPT to clean up the phrasing, but all content is my own.</p>
+<p>Special thanks to my fellow 2026 summer photonics interns at Ayar Labs. A lot of what I’ve learned about silicon photonics came from their help and discussions.</p>
+<h2 id="reference">Reference</h2>
+<ol>
+<li><a rel="external" href="https://ansys.synopsys.com/simulation-topics/what-is-a-waveguide">Ansys Blog - "What is a Waveguide?"</a></li>
+<li><a rel="external" href="https://www.gophotonics.com/community/what-are-evanescent-waves">GoPhotonics Blog - "What are Evanescent Waves?"</a></li>
+<li><a rel="external" href="https://opg.optica.org/oe/fulltext.cfm?uri=oe-23-4-4736">Polymer waveguides for electro-optical integration in data centers and high-performance computers by Dangel et al</a></li>
+<li><a rel="external" href="https://advanced.onlinelibrary.wiley.com/doi/full/10.1002/admt.201901153">Silicon Photonic Platform for Passive Waveguide Devices: Materials, Fabrication, and Applications by Su et al</a></li>
+<li><a rel="external" href="https://ieeexplore.ieee.org/document/11043834">Electronic Photonic Integrated Circuits (EPICs):  Fundamentals and Applications by Saxena</a></li>
+<li><a rel="external" href="https://www.intechopen.com/chapters/61838">Review on Optical Waveguides by Selvaraja et al</a></li>
+<li><a rel="external" href="https://www.sciencedirect.com/science/article/pii/S209592731830327X">On-chip silicon photonic signaling and processing: a review by Wang et al</a></li>
+<li><a rel="external" href="https://resources.system-analysis.cadence.com/blog/msa2021-te-modes-in-rectangular-and-circular-waveguides">Cadence Blog - TE Modes in Rectangular and Circular Waveguides</a></li>
+<li><a rel="external" href="https://www.photondelta.com/blog/how-are-photonic-chips-manufactured/">PhotonDelta Blog - "How are photonic chips manufactured?"</a></li>
+</ol>
+
+</div>
+
+    </div>
+  </section>
+</body>
+
+<footer>
+<p>Jiahan Xie. Updated October 2025. Built using <a href="https://www.getzola.org/">Zola</a>.</p>
+</footer>
+
+</html>
